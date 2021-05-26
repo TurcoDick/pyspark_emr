@@ -8,22 +8,19 @@ from pyspark.sql.functions import col
 from pyspark.sql.functions import *
 
 from load import load_temp_by_city, load_temp_state, load_temp_glob, load_temp_major_city, load_temp_by_country,\
-load_temp_by_city, load_cities_demographics, load_airport_codes, load_country, \
-load_transport_vehicle, load_state_usa, load_motivation, load_immigration, load_port,     
+    load_temp_by_city, load_cities_demographics, load_airport_codes, load_country, \
+    load_transport_vehicle, load_state_usa, load_motivation, load_immigration, load_port,     
 
-# config = configparser.ConfigParser()
-# config.read('dl.cfg')
+config = configparser.ConfigParser()
+config.read('dl.cfg')
 
-# key = config['AWS']['AWS_ACCESS_KEY_ID']
-# secret = config['AWS']['AWS_SECRET_ACCESS_KEY']
+key = config['AWS']['AWS_ACCESS_KEY_ID']
+secret = config['AWS']['AWS_SECRET_ACCESS_KEY']
 
-# print('AWS_ACCESS_KEY_ID={} AWS_SECRET_ACCESS_KEY={}'.format(key, secret))
+print('AWS_ACCESS_KEY_ID={} AWS_SECRET_ACCESS_KEY={}'.format(key, secret))
 
-# os.environ['AWS_ACCESS_KEY_ID']=config['AWS_ACCESS_KEY_ID']
-# os.environ['AWS_SECRET_ACCESS_KEY']=config['AWS_SECRET_ACCESS_KEY']
-
-# os.environ['AWS_ACESS_KEY_ID'] = 'AKIAXMZR3SQK2EJFRI7F'
-# os.environ['AWS_SECRET_ACCESS_KEY'] = '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'
+os.environ['AWS_ACCESS_KEY_ID']=config['AWS_ACCESS_KEY_ID']
+os.environ['AWS_SECRET_ACCESS_KEY']=config['AWS_SECRET_ACCESS_KEY']
 
 def create_spark_session():
     """
