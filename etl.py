@@ -3,7 +3,6 @@ from datetime import datetime
 import os
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf, col, lit
-import pyspark.sql.functions as F
 from pyspark.sql.functions import year, month, dayofmonth, hour, weekofyear, date_format
 from pyspark.sql.functions import col
 from pyspark.sql.functions import *

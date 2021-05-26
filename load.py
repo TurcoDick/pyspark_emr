@@ -1,10 +1,15 @@
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType, DateType
+import configparser
+import pyspark.sql.functions as F
+
+
+config = configparser.ConfigParser()
+config.read('dl.cfg')
 
 
 def load_temp_state(spark):
     
-    global_land_temperatures_by_state_path = root_path + "/temperatures_data/global_land_temperatures_by_state/GlobalLandTemperaturesByState.csv"
-
+    global_land_temperatures_by_state_path = config['PATH']['GLOBAL_LAND_TEMPERATURES_BY_STATE_PATH']
     global_temperatures_by_state_schema = StructType([\
                                                   StructField("t_state_dt", DateType(), False),
                                                   StructField('t_state_average_temperature', DoubleType(), False),
@@ -24,7 +29,7 @@ def load_temp_state(spark):
 
 def load_temp_glob(spark):
     
-    global_temperatures_path = root_path + "/temperatures_data/global_temperatures/GlobalTemperatures.csv"
+    global_temperatures_path = config['PATH']['GLOBAL_TEMPERATURES_PATH']
 
     global_temperatures_schema = StructType([ \
                                   StructField("t_glob_dt", DateType(), False),           
@@ -48,7 +53,7 @@ def load_temp_glob(spark):
 
 def load_temp_major_city(spark):
 
-    global_land_temperatures_by_major_city_path = root_path + "/temperatures_data/global_land_temperatures_by_major_city/GlobalLandTemperaturesByMajorCity.csv"
+    global_land_temperatures_by_major_city_path = config['PATH']['GLOBAL_LAND_TEMPERATURES_BY_MAJOR_CITY_PATH']
 
     global_temp_major_city_schema = StructType([\
                                                 StructField("t_m_city_dt", DateType(), False),
@@ -72,7 +77,7 @@ def load_temp_major_city(spark):
 
 def load_temp_by_country(spark):
     
-    global_land_temperatures_by_country_path = root_path + "/temperatures_data/global_land_temperatures_by_country/GlobalLandTemperaturesByCountry.csv"
+    global_land_temperatures_by_country_path = config['PATH']['GLOBAL_LAND_TEMPERATURES_BY_COUNTRY_PATH']
 
     global_land_temp_by_country_schema = StructType([\
                                                       StructField("t_country_dt", DateType(), False),
@@ -91,7 +96,7 @@ def load_temp_by_country(spark):
 
 def load_temp_by_city(spark):
     
-    global_land_temperatures_by_city_path = root_path + "/temperatures_data/global_land_temperatures_by_city/GlobalLandTemperaturesByCity.csv"
+    global_land_temperatures_by_city_path = config['PATH']['GLOBAL_LAND_TEMPERATURES_BY_CITY_PATH']
 
     global_land_temp_by_city_schema = StructType([\
                                                   StructField("t_city_dt", DateType(), False),
@@ -115,7 +120,7 @@ def load_temp_by_city(spark):
 
 def load_cities_demographics(spark):
     
-    us_cities_demographics_path = root_path + "/us_cities_demographics/us_cities_demographics.csv"
+    us_cities_demographics_path = config['PATH']['US_CITIES_DEMOGRAPHICS_PATH']
 
     us_cities_demog_schema = StructType([\
                                         StructField("cit_demog_city", StringType(), False),
@@ -145,7 +150,7 @@ def load_cities_demographics(spark):
 
 def load_airport_codes(spark):
     
-    airport_codes_csv_path = root_path + "/airport_codes/airport-codes_csv.csv"
+    airport_codes_csv_path = config['PATH']['AIRPORT_CODES_CSV_PATH']
     
     airport_codes_schema = StructType([\
                                        StructField("airp_ident", StringType(), False),
@@ -174,7 +179,7 @@ def load_airport_codes(spark):
 
 def load_country(spark):
     
-    country_path = root_path + "/country_code_and_name/country_code_and_name.csv"
+    country_path = config['PATH']['COUNTRY_PATH']
 
     country_schema = StructType([\
                                   StructField("country_code", IntegerType(), False),
@@ -193,7 +198,7 @@ def load_country(spark):
 
 def load_transport_vehicle(spark):
     
-    transport_vehicle_path = root_path + "/transport_vehicle/transport_vehicle.csv"
+    transport_vehicle_path = config['PATH']['TRANSPORT_VEHICLE_PATH']
 
     transport_vehicle_schema = StructType([\
                                            StructField("vehi_code", IntegerType(), False),
@@ -212,7 +217,7 @@ def load_transport_vehicle(spark):
 
 def load_state_usa(spark):
     
-    state_usa_path = root_path + '/state_usa/state_usa.csv'
+    state_usa_path = config['PATH']['STATE_USA_PATH']
 
     state_usa_schema = StructType([\
                                    StructField("state_usa_code", StringType(), False),
@@ -230,7 +235,7 @@ def load_state_usa(spark):
 
 def load_motivation(spark):
     
-    motivation_path = root_path + '/motivation/motivation.csv'
+    motivation_path = config['PATH']['MOTIVATION_PATH']
 
     motivation_schema = StructType([\
                                     StructField("motiv_code", IntegerType(), False),
@@ -248,13 +253,13 @@ def load_motivation(spark):
 
 
 def load_immigration(spark):
-    immi_parquet_path_2 = root_path + '/immigration_data/*'
+    immi_parquet_path_2 = config['PATH']['IMMIGRATION_PATH']
     
     return spark.read.parquet(immi_parquet_path_2)
 
 def load_port(spark):
     
-    port_path = root_path + '/port/port.csv'
+    port_path = config['PATH']['PORT_PATH']
     
     port_schema = StructType([\
                                StructField("port_code", StringType(), False),
@@ -272,6 +277,6 @@ def load_port(spark):
 
     return df_port\
             .withColumn('column_drop', F.split(df_port['port_name'], ','))\
-            .withColumn('port_portal', trim(F.col('column_drop')[0]))\
-            .withColumn('port_country_acronym', trim(F.col('column_drop')[1]))\
+            .withColumn('port_portal', F.trim(F.col('column_drop')[0]))\
+            .withColumn('port_country_acronym', F.trim(F.col('column_drop')[1]))\
             .drop('column_drop')
