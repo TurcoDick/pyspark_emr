@@ -80,6 +80,7 @@ def big_table(spark):
 
 def vehicle_motivation(result):
     return result.filter('vehi_name', 'motiv_name', 'cicid')\
+        .groupBy('vehi_name', 'motiv_name')\
         .agg(count('cicid')\
         .alias('total_count_immi_by_vehicle'))\
         .sort(desc('total_count_immi_by_vehicle'))
